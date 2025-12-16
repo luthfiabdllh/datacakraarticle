@@ -2,18 +2,42 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { z } from "zod"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Credentials({
             credentials: {
-                email: { label: "Email", type: "email" },
+                identifier: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
             authorize: async (credentials) => {
+                if (!API_URL) return null;
+
                 try {
-                    // This is a placeholder that will be connected to the real API later
-                    // as per PRD requirements in step 6.2
-                    console.log("Authorize called with", credentials)
+                    const res = await fetch(`${API_URL}/api/auth/local`, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            identifier: credentials.identifier,
+                            password: credentials.password,
+                        }),
+                        headers: { "Content-Type": "application/json" },
+                    })
+
+                    const data = await res.json()
+
+                    if (!res.ok) {
+                        throw new Error(data.error?.message || "Authentication failed")
+                    }
+
+                    if (data.jwt && data.user) {
+                        return {
+                            id: data.user.id,
+                            username: data.user.username,
+                            email: data.user.email,
+                            jwt: data.jwt,
+                        }
+                    }
                     return null
                 } catch (error) {
                     console.error("Auth error:", error)
@@ -28,16 +52,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         jwt({ token, user }) {
             if (user) {
-                // user object comes from authorize return
                 token.id = user.id
+                token.username = user.username
+                token.jwt = user.jwt
             }
             return token
         },
         session({ session, token }) {
-            if (session.user && token.id) {
-                // session.user.id = token.id as string
+            if (session.user) {
+                session.user.id = token.id
+                session.user.username = token.username
+                session.user.jwt = token.jwt
             }
             return session
         },
     },
+    session: {
+        strategy: "jwt",
+    },
+    secret: process.env.AUTH_SECRET,
 })
