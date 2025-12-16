@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import ReduxProvider from "@/redux/provider"
+import { Header } from "@/components/header"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Header />
             {children}
           </ThemeProvider>
         </ReduxProvider>
