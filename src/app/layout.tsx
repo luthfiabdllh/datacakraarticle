@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import ReduxProvider from "@/redux/provider"
 import { Header } from "@/components/header"
+import { SessionProvider } from "next-auth/react"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,17 +33,19 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${plusJakartaSans.variable} font-sans antialiased`}
       >
-        <ReduxProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Header />
-            {children}
-          </ThemeProvider>
-        </ReduxProvider>
+        <SessionProvider>
+          <ReduxProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Header />
+              {children}
+            </ThemeProvider>
+          </ReduxProvider>
+        </SessionProvider>
       </body>
     </html>
   );
