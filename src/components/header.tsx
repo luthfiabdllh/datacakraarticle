@@ -16,13 +16,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Moon, Sun, Menu } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 export function Header() {
     const { data: session } = useSession()
     const pathname = usePathname()
     const { setTheme } = useTheme()
+    const [isScrolled, setIsScrolled] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
 
     const routes = [
@@ -30,12 +31,29 @@ export function Header() {
         { href: "/articles", label: "Explore" },
     ]
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10)
+        }
+        window.addEventListener("scroll", handleScroll)
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, [])
+
+    const isHome = pathname === "/"
+
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className={cn(
+            "z-50 w-full transition-all duration-300 ease-in-out",
+            isHome ? "fixed top-0 left-0 right-0 border-transparent" : "sticky top-0 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+            isHome && isScrolled ? "bg-background/80 backdrop-blur-md border-b border-border shadow-sm py-2" : isHome ? "bg-transparent py-4" : ""
+        )}>
             <div className="container flex h-16 items-center justify-between">
                 <div className="flex items-center gap-6">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
-                        <span className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                        <span className={cn(
+                            "text-xl font-bold bg-clip-text text-transparent transition-colors",
+                            isHome && !isScrolled ? "bg-gradient-to-r from-white to-white/70" : "bg-gradient-to-r from-primary to-blue-600"
+                        )}>
                             Datacakra Feeds
                         </span>
                     </Link>
