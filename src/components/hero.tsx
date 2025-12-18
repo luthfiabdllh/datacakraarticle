@@ -6,6 +6,9 @@ import { User } from "lucide-react"
 import Image from "next/image"
 
 import { Article } from "@/types"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
 interface TravelHeroProps {
     articles: Article[]
@@ -152,31 +155,42 @@ export function Hero({ articles = [] }: TravelHeroProps) {
                         </motion.h1>
                     </motion.div>
 
-                    <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-16">
-                        {/* Description */}
-                        <motion.p
-                            variants={itemVariants}
-                            className="text-lg text-white/80 max-w-xl leading-relaxed"
-                        >
-                            {currentArticle?.description?.slice(0, 150) + (currentArticle?.description?.length > 150 ? "..." : "") || "Unknown Description"}
-                        </motion.p>
+                    <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-16 items-start md:items-end">
+                        <div className="flex flex-col gap-6 max-w-xl">
+                            {/* Description */}
+                            <motion.p
+                                variants={itemVariants}
+                                className="text-lg text-white/80 leading-relaxed"
+                            >
+                                {currentArticle?.description?.slice(0, 150) + (currentArticle?.description?.length > 150 ? "..." : "") || "Unknown Description"}
+                            </motion.p>
+
+                            {/* Read Article Button */}
+                            <motion.div variants={itemVariants}>
+                                <Button asChild size="lg" className="rounded-full bg-white text-black hover:bg-white/90 font-semibold px-8">
+                                    <Link href={`/articles/${currentArticle?.documentId}`}>
+                                        Read Article
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            </motion.div>
+                        </div>
 
                         {/* Meta User */}
                         <motion.div
                             variants={itemVariants}
                             whileHover={{ y: -5 }}
-                            className="flex flex-col items-right"
+                            className="flex flex-col items-start md:items-end min-w-max"
                         >
-                            <div
-                                className="flex items-center gap-4 rounded-2xl cursor-pointer md:ml-auto ">
+                            <div className="flex items-center gap-4 rounded-2xl cursor-pointer">
                                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white/20">
                                     <div className="bg-stone-500 w-full h-full flex items-center justify-center text-white font-bold">
-                                        <User />
+                                        <User className="h-6 w-6" />
                                     </div>
                                 </div>
                                 <h4 className="text-white text-lg font-semibold">{currentArticle?.user?.username || "Unknown Author"}</h4>
                             </div>
-                            <p className="flex items-center gap-2 mt-2 text-sm md:ml-auto text-white">
+                            <p className="flex items-center gap-2 mt-2 text-sm text-white/80">
                                 {currentArticle?.publishedAt ? new Date(currentArticle.publishedAt).toLocaleDateString() : "Date"}
                                 <span className="w-1 h-1 rounded-full bg-white/40" />
                                 {currentArticle?.comments?.length || 0} Comments
