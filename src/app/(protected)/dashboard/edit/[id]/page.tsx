@@ -7,15 +7,14 @@ import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 import React from "react"
 
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { IconArrowLeft } from "@tabler/icons-react"
+import Link from "next/link"
+
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter()
     // React.use() to unwrap params in Next.js 15+ (using Promise type)
-    // But due to client component limits with async params in older/stable pattern, using React.use() or await in server parent is safer. 
-    // As this is a client component page in app router, let's use React.use() if available or standard props. 
-    // Given Next.js 15/16 changes, `params` is a Promise.
-    // We'll trust the standard unwrapping for now or handle it via a wrapper.
-    // Actually, let's just use `use` from react if available in this environment (Next 16).
-
     const { id } = React.use(params)
 
     const { data: articleData, isLoading: isLoadingArticle } = useGetArticleByIdQuery(id)
@@ -50,15 +49,33 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     }
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-3xl font-bold tracking-tight">Edit Article</h1>
-            <div className="max-w-2xl">
-                <ArticleForm
-                    initialData={articleData.data}
-                    onSubmit={onSubmit}
-                    isSubmitting={isUpdating}
-                />
+        <div className="space-y-6 container mx-auto max-w-4xl py-6">
+            <div className="flex items-center justify-between">
+                <Button variant="ghost" size="sm" asChild className="-ml-2 text-muted-foreground hover:text-foreground">
+                    <Link href="/dashboard/my-articles">
+                        <IconArrowLeft className="mr-1 h-4 w-4" /> Back to My Articles
+                    </Link>
+                </Button>
             </div>
+
+            <div className="flex flex-col gap-2">
+                <h1 className="text-3xl font-bold tracking-tight">Edit Article</h1>
+                <p className="text-muted-foreground">Update your article content and settings.</p>
+            </div>
+
+            <Card className="border-border">
+                <CardHeader>
+                    <CardTitle>Article Details</CardTitle>
+                    <CardDescription>Make changes to your article below.</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-6">
+                    <ArticleForm
+                        initialData={articleData.data}
+                        onSubmit={onSubmit}
+                        isSubmitting={isUpdating}
+                    />
+                </CardContent>
+            </Card>
         </div>
     )
 }
