@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button"
 import { ArticleCard } from "@/components/article-card"
 import { fetchArticles } from "@/lib/api"
 import { ArrowRight } from "lucide-react"
+import { auth } from "@/auth"
 
 export default async function Home() {
-  const { data: articles } = await fetchArticles({ page: 1, pageSize: 3 })
+  const session = await auth()
+  const { data: articles } = await fetchArticles({ page: 1, pageSize: 3 }, session?.user?.jwt)
 
   return (
     <div className="flex flex-col min-h-screen">

@@ -3,6 +3,7 @@ import { InfiniteArticleList } from "@/components/infinite-article-list"
 import { SearchFilter } from "@/components/search-filter"
 import { Suspense } from "react"
 import { Loader2 } from "lucide-react"
+import { auth } from "@/auth"
 
 export const dynamic = 'force-dynamic'
 
@@ -19,13 +20,14 @@ export default async function ArticlesPage(props: PageProps) {
     const currentPage = Number(searchParams?.page) || 1
     const search = searchParams?.search || ""
     const category = searchParams?.category || ""
+    const session = await auth()
 
     const { data: articles } = await fetchArticles({
         page: currentPage,
         pageSize: 10,
         search,
         category
-    })
+    }, session?.user?.jwt)
 
     // Fetch categories for the filter
     const { data: categories } = await fetchCategories()

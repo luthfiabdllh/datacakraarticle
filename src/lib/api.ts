@@ -7,7 +7,7 @@ export async function fetchArticles(searchParams?: {
     pageSize?: number
     search?: string
     category?: string
-}): Promise<ApiResponse<Article[]>> {
+}, token?: string): Promise<ApiResponse<Article[]>> {
     if (!API_URL) throw new Error("API_URL is not defined")
 
     const params = new URLSearchParams()
@@ -19,7 +19,7 @@ export async function fetchArticles(searchParams?: {
 
     // Search
     if (searchParams?.search) {
-        params.append("filters[title][$eqi]", searchParams.search)
+        params.append("filters[title][$containsi]", searchParams.search)
     }
 
     // Filter Category
@@ -27,8 +27,14 @@ export async function fetchArticles(searchParams?: {
         params.append("filters[category][name][$eqi]", searchParams.category)
     }
 
+    const headers: HeadersInit = {}
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`
+    }
+
     const res = await fetch(`${API_URL}/api/articles?${params.toString()}`, {
         cache: "no-store", // Ensure fresh data for listings
+        headers,
     })
 
     if (!res.ok) {
