@@ -47,7 +47,7 @@ export async function fetchArticles(searchParams?: {
 export async function fetchArticleById(id: string, token?: string): Promise<ApiResponse<Article>> {
     if (!API_URL) throw new Error("API_URL is not defined")
 
-    const populateParams = "populate[comments][populate][user]=*&populate[user]=*&populate[category]=*"
+    const populateParams = "populate[comments][populate][user]=*&populate[comments][sort][0]=createdAt:desc&populate[user]=*&populate[category]=*"
     const headers: HeadersInit = {}
     if (token) {
         headers["Authorization"] = `Bearer ${token}`

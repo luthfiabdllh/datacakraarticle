@@ -19,6 +19,7 @@ import {
 import { toast } from "sonner"
 import { deleteComment, updateComment } from "@/actions/comments"
 import { Edit2, Loader2, Trash2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface CommentItemProps {
     comment: Comment
@@ -26,13 +27,13 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, articleDocumentId }: CommentItemProps) {
+    const router = useRouter()
     const { data: session } = useSession()
     const [isEditing, setIsEditing] = useState(false)
     const [editContent, setEditContent] = useState(comment.content)
     const [isLoading, setIsLoading] = useState(false)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
-    // Ensure type safety when comparing IDs
     // Ensure type safety when comparing IDs
     // Strict check: Session MUST exist, and either email or ID must match
     const isOwner = !!session?.user && (
@@ -51,6 +52,7 @@ export function CommentItem({ comment, articleDocumentId }: CommentItemProps) {
         } else {
             toast.success("Comment updated")
             setIsEditing(false)
+            router.refresh()
         }
     }
 
@@ -64,6 +66,7 @@ export function CommentItem({ comment, articleDocumentId }: CommentItemProps) {
             toast.error(result.error)
         } else {
             toast.success("Comment deleted")
+            router.refresh()
         }
     }
 

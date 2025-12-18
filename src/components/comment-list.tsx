@@ -10,6 +10,7 @@ import { createComment } from "@/actions/comments"
 import { toast } from "sonner"
 import { Loader2, MessageSquare } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface CommentListProps {
     comments: Comment[]
@@ -19,6 +20,7 @@ interface CommentListProps {
 
 export function CommentList({ comments, articleId, articleDocumentId }: CommentListProps) {
     const { data: session } = useSession()
+    const router = useRouter()
     const [newComment, setNewComment] = useState("")
     const [isPosting, setIsPosting] = useState(false)
 
@@ -34,6 +36,7 @@ export function CommentList({ comments, articleId, articleDocumentId }: CommentL
         } else {
             toast.success("Comment posted")
             setNewComment("")
+            router.refresh()
         }
     }
 
