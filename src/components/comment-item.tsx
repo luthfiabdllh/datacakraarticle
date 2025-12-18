@@ -33,8 +33,12 @@ export function CommentItem({ comment, articleDocumentId }: CommentItemProps) {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
     // Ensure type safety when comparing IDs
-    const isOwner = session?.user?.email === comment.user?.email ||
-        (session?.user?.id && comment.user?.id && String(session.user.id) === String(comment.user.id));
+    // Ensure type safety when comparing IDs
+    // Strict check: Session MUST exist, and either email or ID must match
+    const isOwner = !!session?.user && (
+        (!!session.user.email && session.user.email === comment.user?.email) ||
+        (!!session.user.id && !!comment.user?.id && String(session.user.id) === String(comment.user.id))
+    );
 
     async function handleUpdate() {
         if (!editContent.trim()) return

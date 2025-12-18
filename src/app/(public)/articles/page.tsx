@@ -1,5 +1,5 @@
 import { fetchArticles, fetchCategories } from "@/lib/api"
-import { ArticleCard } from "@/components/article-card"
+import { InfiniteArticleList } from "@/components/infinite-article-list"
 import { SearchFilter } from "@/components/search-filter"
 import { Suspense } from "react"
 import { Loader2 } from "lucide-react"
@@ -43,20 +43,11 @@ export default async function ArticlesPage(props: PageProps) {
                 <SearchFilter categories={categories} />
             </Suspense>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {articles.length > 0 ? (
-                    articles.map((article) => (
-                        <ArticleCard key={article.id} article={article} />
-                    ))
-                ) : (
-                    <div className="col-span-full text-center py-12 text-muted-foreground">
-                        No articles found matching your criteria.
-                    </div>
-                )}
-            </div>
-
-            {/* Basic Pagination Link - Ideally Client Component for Load More */}
-            {/* For now, just a note or simple next/prev if needed, but Infinite Scroll is for later step */}
+            <InfiniteArticleList
+                initialArticles={articles}
+                search={search}
+                category={category}
+            />
         </div>
     )
 }

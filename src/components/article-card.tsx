@@ -7,7 +7,7 @@ import {
     CardHeader,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, UserIcon } from "lucide-react"
+import { CalendarIcon, UserIcon, MessageSquare } from "lucide-react"
 import { format } from "date-fns"
 
 interface ArticleCardProps {
@@ -41,16 +41,22 @@ export function ArticleCard({ article }: ArticleCardProps) {
                         {article.description}
                     </p>
                 </CardContent>
-                <CardFooter className="p-4 pt-0 text-sm text-muted-foreground flex justify-between items-center mt-auto">
+                <div className="p-4 pt-0 text-sm text-muted-foreground flex justify-between items-center mt-auto">
                     <div className="flex items-center gap-1">
                         <UserIcon className="w-4 h-4" />
-                        <span className="truncate max-w-[100px]">{article.user.username}</span>
+                        <span className="truncate max-w-[100px]">{article.user?.username || "Unknown Author"}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <CalendarIcon className="w-4 h-4" />
-                        <span>{format(new Date(article.publishedAt), "MMM d, yyyy")}</span>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                            <MessageSquare className="w-4 h-4" />
+                            <span>{article.comments?.length || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <CalendarIcon className="w-4 h-4" />
+                            <span>{format(new Date(article.publishedAt), "MMM d, yyyy")}</span>
+                        </div>
                     </div>
-                </CardFooter>
+                </div>
             </Card>
         </Link>
     )

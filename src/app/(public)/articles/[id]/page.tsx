@@ -6,6 +6,7 @@ import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { auth } from "@/auth"
 
 export const dynamic = 'force-dynamic'
 
@@ -36,10 +37,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArticleDetailPage({ params }: PageProps) {
     const { id } = await params
+    const session = await auth()
     let article
 
     try {
-        const { data } = await fetchArticleById(id)
+        const { data } = await fetchArticleById(id, session?.user?.jwt)
         article = data
     } catch (error) {
         notFound()
@@ -62,9 +64,9 @@ export default async function ArticleDetailPage({ params }: PageProps) {
                     <div className="flex items-center gap-2">
                         <Avatar className="h-8 w-8">
                             <AvatarImage src="" />
-                            <AvatarFallback>{article.user.username?.charAt(0).toUpperCase()}</AvatarFallback>
+                            <AvatarFallback>{article.user?.username?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
                         </Avatar>
-                        <span className="font-medium text-foreground">{article.user.username}</span>
+                        <span className="font-medium text-foreground">{article.user?.username || "Unknown Author"}</span>
                     </div>
                     <span>•</span>
                     <div className="flex items-center gap-1">
