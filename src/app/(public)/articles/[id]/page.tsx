@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                 images: [{ url: article.cover_image_url }],
             },
         }
-    } catch (error) {
+    } catch {
         return {
             title: "Article Not Found",
         }
@@ -43,7 +43,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
     try {
         const { data } = await fetchArticleById(id, session?.user?.jwt)
         article = data
-    } catch (error) {
+    } catch {
         notFound()
     }
 

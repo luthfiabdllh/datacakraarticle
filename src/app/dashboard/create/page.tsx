@@ -11,6 +11,7 @@ export default function CreateArticlePage() {
     const router = useRouter()
     const [createArticle, { isLoading }] = useCreateArticleMutation()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async function onSubmit(values: any) {
         if (!session?.user?.id) return
 
@@ -23,7 +24,7 @@ export default function CreateArticlePage() {
 
             toast.success("Article created successfully!")
             router.push("/dashboard/my-articles")
-        } catch (error) {
+        } catch {
             toast.error("Failed to create article.")
         }
     }

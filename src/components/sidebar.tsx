@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LayoutDashboard, FileText, Upload, Settings, LogOut, Layers } from "lucide-react"
+import { LayoutDashboard, FileText, Upload, LogOut, Layers } from "lucide-react"
 import { signOut } from "next-auth/react"
 
 const sidebarItems = [

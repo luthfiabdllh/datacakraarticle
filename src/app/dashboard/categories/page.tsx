@@ -45,7 +45,7 @@ export default function CategoriesPage() {
             toast.success("Category created")
             setNewCategoryName("")
             setIsCreateOpen(false)
-        } catch (error) {
+        } catch {
             toast.error("Failed to create category")
         }
     }
@@ -56,7 +56,7 @@ export default function CategoriesPage() {
             await updateCategory({ id: editingCategory.id, name: editingCategory.name }).unwrap()
             toast.success("Category updated")
             setEditingCategory(null)
-        } catch (error) {
+        } catch {
             toast.error("Failed to update category")
         }
     }
@@ -67,7 +67,7 @@ export default function CategoriesPage() {
             await deleteCategory(deletingId).unwrap()
             toast.success("Category deleted")
             setDeletingId(null)
-        } catch (error) {
+        } catch {
             toast.error("Failed to delete category")
         }
     }

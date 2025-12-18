@@ -32,17 +32,10 @@ export function InfiniteArticleList({ initialArticles, search = "", category = "
         }
     }, [initialArticles, search, category])
 
-    useEffect(() => {
-        if (inView && hasMore && !loading) {
-            loadMoreArticles()
-        }
-    }, [inView, hasMore, loading])
 
     async function loadMoreArticles() {
         setLoading(true)
         const nextPage = page + 1
-        // Artificial delay for smooth UX if needed, but not strictly required
-        // await new Promise(resolve => setTimeout(resolve, 500)) 
 
         const newArticles = await fetchArticlesAction(nextPage, search, category)
 
@@ -57,6 +50,13 @@ export function InfiniteArticleList({ initialArticles, search = "", category = "
         }
         setLoading(false)
     }
+
+    useEffect(() => {
+        if (inView && hasMore && !loading) {
+            loadMoreArticles()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inView, hasMore, loading])
 
     return (
         <>

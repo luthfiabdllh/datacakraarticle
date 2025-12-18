@@ -36,7 +36,7 @@ export async function createComment(articleId: number, articleDocumentId: string
 
         revalidatePath(`/articles/${articleDocumentId}`)
         return { success: true }
-    } catch (error) {
+    } catch {
         return { error: "Something went wrong." }
     }
 }
@@ -64,7 +64,7 @@ export async function deleteComment(commentId: string, articleDocumentId: string
 
         revalidatePath(`/articles/${articleDocumentId}`)
         return { success: true }
-    } catch (error) {
+    } catch {
         return { error: "Something went wrong." }
     }
 }
@@ -98,7 +98,7 @@ export async function updateComment(commentId: string, articleDocumentId: string
 
         revalidatePath(`/articles/${articleDocumentId}`)
         return { success: true }
-    } catch (error) {
+    } catch {
         return { error: "Something went wrong." }
     }
 }

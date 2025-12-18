@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -26,7 +25,6 @@ import { useGetCategoriesQuery, useUploadImageMutation } from "@/redux/api/apiSl
 import { useEffect, useState } from "react"
 import { Loader2, UploadCloud, X } from "lucide-react"
 import { toast } from "sonner"
-import Image from "next/image"
 
 const formSchema = z.object({
     title: z.string().min(5, {
@@ -44,6 +42,7 @@ const formSchema = z.object({
 })
 
 interface ArticleFormProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     initialData?: any
     onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>
     isSubmitting?: boolean
@@ -90,7 +89,7 @@ export function ArticleForm({ initialData, onSubmit, isSubmitting }: ArticleForm
                 setPreview(fullUrl)
                 toast.success("Image uploaded successfully")
             }
-        } catch (error) {
+        } catch {
             toast.error("Failed to upload image")
         }
     }
@@ -169,6 +168,7 @@ export function ArticleForm({ initialData, onSubmit, isSubmitting }: ArticleForm
                                     />
                                     {preview ? (
                                         <div className="relative aspect-video w-full rounded-md overflow-hidden border">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
                                             <img
                                                 src={preview}
                                                 alt="Preview"

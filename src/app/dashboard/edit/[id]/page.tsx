@@ -21,6 +21,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     const { data: articleData, isLoading: isLoadingArticle } = useGetArticleByIdQuery(id)
     const [updateArticle, { isLoading: isUpdating }] = useUpdateArticleMutation()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async function onSubmit(values: any) {
         if (!articleData?.data?.id) return
 
@@ -35,7 +36,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
 
             toast.success("Article updated successfully!")
             router.push("/dashboard/my-articles")
-        } catch (error) {
+        } catch {
             toast.error("Failed to update article.")
         }
     }

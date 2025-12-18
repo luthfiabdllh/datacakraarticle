@@ -101,6 +101,7 @@ export const apiSlice = createApi({
         }),
 
         // --- Upload ---
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         uploadImage: builder.mutation<any, FormData>({
             query: (formData) => ({
                 url: "upload",

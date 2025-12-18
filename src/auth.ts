@@ -1,6 +1,5 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { z } from "zod"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -60,8 +59,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
         session({ session, token }) {
             if (session.user) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (session.user as any).id = token.id as number
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (session.user as any).username = token.username as string
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (session.user as any).jwt = token.jwt as string
             }
             return session

@@ -13,7 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Moon, Sun, Menu, User } from "lucide-react"
+import { Moon, Sun, Menu } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useState } from "react"
@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils"
 export function Header() {
     const { data: session } = useSession()
     const pathname = usePathname()
-    const { setTheme, theme } = useTheme()
+    const { setTheme } = useTheme()
     const [isOpen, setIsOpen] = useState(false)
 
     const routes = [

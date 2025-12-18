@@ -20,7 +20,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
     Form,
     FormControl,
@@ -69,7 +68,7 @@ export default function LoginPage() {
             toast.success("Login successful")
             router.push("/dashboard")
             router.refresh()
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong")
         } finally {
             setIsLoading(false)

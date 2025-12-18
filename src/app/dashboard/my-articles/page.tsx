@@ -43,7 +43,7 @@ export default function MyArticlesPage() {
             await deleteArticle(articleToDelete).unwrap()
             toast.success("Article deleted successfully")
             setArticleToDelete(null)
-        } catch (error) {
+        } catch {
             toast.error("Failed to delete article")
         }
     }
