@@ -96,138 +96,142 @@ export function ArticleForm({ initialData, onSubmit, isSubmitting }: ArticleForm
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-2xl">
-                <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Title</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Article title" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Category</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <div className="grid gap-6 md:grid-cols-2">
+                    <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                            <FormItem className="col-span-2 md:col-span-1">
+                                <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <SelectTrigger disabled={isLoadingCategories}>
-                                        <SelectValue placeholder="Select a category" />
-                                    </SelectTrigger>
+                                    <Input placeholder="Enter article title" {...field} className="bg-background" />
                                 </FormControl>
-                                <SelectContent>
-                                    {categoriesData?.data?.map((category) => (
-                                        <SelectItem key={category.id} value={category.id.toString()}>
-                                            {category.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Description</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Tell your story..."
-                                    className="min-h-[200px]"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                            <FormItem className="col-span-2 md:col-span-1">
+                                <FormLabel>Category</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger disabled={isLoadingCategories} className="bg-background">
+                                            <SelectValue placeholder="Select a category" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {categoriesData?.data?.map((category) => (
+                                            <SelectItem key={category.id} value={category.id.toString()}>
+                                                {category.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="cover_image_url"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Cover Image</FormLabel>
-                            <FormControl>
-                                <div className="space-y-4">
-                                    <Input
-                                        type="hidden"
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem className="col-span-2">
+                                <FormLabel>Content</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="Write your article content here..."
+                                        className="min-h-[300px] resize-y bg-background"
                                         {...field}
                                     />
-                                    {preview ? (
-                                        <div className="relative aspect-video w-full rounded-md overflow-hidden border">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={preview}
-                                                alt="Preview"
-                                                className="object-cover w-full h-full"
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="destructive"
-                                                size="icon"
-                                                className="absolute top-2 right-2 h-6 w-6"
-                                                onClick={() => {
-                                                    setPreview(null)
-                                                    form.setValue("cover_image_url", "")
-                                                }}
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center justify-center w-full">
-                                            <label
-                                                htmlFor="dropzone-file"
-                                                className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                                            >
-                                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    {isUploading ? (
-                                                        <Loader2 className="h-10 w-10 text-gray-500 animate-spin" />
-                                                    ) : (
-                                                        <UploadCloud className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
-                                                    )}
-                                                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                                        <span className="font-semibold">Click to upload</span>
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                                                    </p>
-                                                </div>
-                                                <input
-                                                    id="dropzone-file"
-                                                    type="file"
-                                                    className="hidden"
-                                                    accept="image/*"
-                                                    onChange={handleImageUpload}
-                                                    disabled={isUploading}
-                                                />
-                                            </label>
-                                        </div>
-                                    )}
-                                </div>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <Button type="submit" disabled={isSubmitting || isUploading}>
-                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {initialData ? "Update Article" : "Create Article"}
-                </Button>
+                    <FormField
+                        control={form.control}
+                        name="cover_image_url"
+                        render={({ field }) => (
+                            <FormItem className="col-span-2">
+                                <FormLabel>Cover Image</FormLabel>
+                                <FormControl>
+                                    <div className="space-y-4">
+                                        <Input
+                                            type="hidden"
+                                            {...field}
+                                        />
+                                        {preview ? (
+                                            <div className="relative aspect-video w-full rounded-lg overflow-hidden border bg-muted/30">
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img
+                                                    src={preview}
+                                                    alt="Preview"
+                                                    className="object-cover w-full h-full"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    className="absolute top-2 right-2 h-8 w-8 shadow-sm"
+                                                    onClick={() => {
+                                                        setPreview(null)
+                                                        form.setValue("cover_image_url", "")
+                                                    }}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center justify-center w-full">
+                                                <label
+                                                    htmlFor="dropzone-file"
+                                                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-muted/30 hover:bg-muted/50 transition-colors border-muted-foreground/25 hover:border-muted-foreground/50"
+                                                >
+                                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                        {isUploading ? (
+                                                            <Loader2 className="h-10 w-10 text-muted-foreground animate-spin" />
+                                                        ) : (
+                                                            <UploadCloud className="w-10 h-10 mb-4 text-muted-foreground" />
+                                                        )}
+                                                        <p className="mb-2 text-sm text-muted-foreground">
+                                                            <span className="font-semibold">Click to upload</span> or drag and drop
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                                        </p>
+                                                    </div>
+                                                    <input
+                                                        id="dropzone-file"
+                                                        type="file"
+                                                        className="hidden"
+                                                        accept="image/*"
+                                                        onChange={handleImageUpload}
+                                                        disabled={isUploading}
+                                                    />
+                                                </label>
+                                            </div>
+                                        )}
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <div className="flex justify-end pt-4">
+                    <Button type="submit" disabled={isSubmitting || isUploading} size="lg" className="w-full md:w-auto">
+                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {initialData ? "Update Article" : "Publish Article"}
+                    </Button>
+                </div>
             </form>
         </Form>
     )

@@ -15,13 +15,17 @@ export const articlesApi = apiSlice.injectEndpoints({
             },
             providesTags: ["Article"],
         }),
-        getMyArticles: builder.query<ApiResponse<Article[]>, { userId: number | string, page?: number, pageSize?: number }>({
-            query: ({ userId, page = 1, pageSize = 10 }) => {
+        getMyArticles: builder.query<ApiResponse<Article[]>, { userId: number | string, page?: number, pageSize?: number, search?: string, category?: string }>({
+            query: ({ userId, page = 1, pageSize = 10, search, category }) => {
                 const query = new URLSearchParams()
                 query.append("populate", "*")
                 query.append("filters[user][id][$eq]", userId.toString())
                 query.append("pagination[page]", page.toString())
                 query.append("pagination[pageSize]", pageSize.toString())
+
+                if (search) query.append("filters[title][$containsi]", search)
+                if (category && category !== "all") query.append("filters[category][id][$eq]", category)
+
                 return `articles?${query.toString()}`
             },
             providesTags: ["UserArticles"],
