@@ -3,8 +3,13 @@ import { Category, ApiResponse } from "@/types"
 
 export const categoriesApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getCategories: builder.query<ApiResponse<Category[]>, void>({
-            query: () => "categories",
+        getCategories: builder.query<ApiResponse<Category[]>, { search?: string } | void>({
+            query: (params) => {
+                if (params && params.search) {
+                    return `categories?filters[name][$containsi]=${params.search}`
+                }
+                return "categories"
+            },
             providesTags: ["Category"],
         }),
         createCategory: builder.mutation<ApiResponse<Category>, { name: string }>({
@@ -15,7 +20,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Category"],
         }),
-        updateCategory: builder.mutation<ApiResponse<Category>, { id: number; name: string }>({
+        updateCategory: builder.mutation<ApiResponse<Category>, { id: string; name: string }>({
             query: ({ id, name }) => ({
                 url: `categories/${id}`,
                 method: "PUT",
@@ -23,7 +28,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Category"],
         }),
-        deleteCategory: builder.mutation<ApiResponse<Category>, number>({
+        deleteCategory: builder.mutation<ApiResponse<Category>, string>({
             query: (id) => ({
                 url: `categories/${id}`,
                 method: "DELETE",

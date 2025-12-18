@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useGetCategoriesQuery, useCreateCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from "@/redux/api"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,19 +22,29 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Edit, Trash2, Plus, Loader2 } from "lucide-react"
+import { Edit, Trash2, Plus, Loader2, Search } from "lucide-react"
 import { toast } from "sonner"
 import { format } from "date-fns"
 
 export default function CategoriesPage() {
-    const { data: categoriesData, isLoading } = useGetCategoriesQuery()
+    const [searchTerm, setSearchTerm] = useState("")
+    const [debouncedSearch, setDebouncedSearch] = useState("")
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchTerm)
+        }, 500)
+        return () => clearTimeout(timer)
+    }, [searchTerm])
+
+    const { data: categoriesData, isLoading } = useGetCategoriesQuery({ search: debouncedSearch })
     const [createCategory, { isLoading: isCreating }] = useCreateCategoryMutation()
     const [updateCategory, { isLoading: isUpdating }] = useUpdateCategoryMutation()
     const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation()
 
     const [isCreateOpen, setIsCreateOpen] = useState(false)
-    const [editingCategory, setEditingCategory] = useState<{ id: number; name: string } | null>(null)
-    const [deletingId, setDeletingId] = useState<number | null>(null)
+    const [editingCategory, setEditingCategory] = useState<{ id: string; name: string } | null>(null)
+    const [deletingId, setDeletingId] = useState<string | null>(null)
 
     const [newCategoryName, setNewCategoryName] = useState("")
 
@@ -110,7 +120,19 @@ export default function CategoriesPage() {
                 </Dialog>
             </div>
 
-            <div className="border rounded-md">
+            <div className="flex w-full max-w-sm items-center space-x-2">
+                <div className="relative flex-1">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        placeholder="Search categories..."
+                        className="pl-9 bg-background"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+            </div>
+
+            <div className="border rounded-md bg-card">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -129,7 +151,7 @@ export default function CategoriesPage() {
                         ) : categoriesData?.data?.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={3} className="h-24 text-center">
-                                    No categories found.
+                                    {searchTerm ? "No categories matching search." : "No categories found."}
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -142,15 +164,15 @@ export default function CategoriesPage() {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => setEditingCategory({ id: category.id, name: category.name })}
+                                                onClick={() => setEditingCategory({ id: category.documentId, name: category.name })}
                                             >
-                                                <Edit className="h-4 w-4" />
+                                                <Edit className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                                             </Button>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="text-destructive"
-                                                onClick={() => setDeletingId(category.id)}
+                                                className="text-muted-foreground hover:text-destructive"
+                                                onClick={() => setDeletingId(category.documentId)}
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
