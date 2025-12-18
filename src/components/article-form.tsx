@@ -21,7 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useGetCategoriesQuery, useUploadImageMutation } from "@/redux/api/apiSlice"
+import { useGetCategoriesQuery, useUploadImageMutation } from "@/redux/api"
 import { useEffect, useState } from "react"
 import { Loader2, UploadCloud, X } from "lucide-react"
 import { toast } from "sonner"

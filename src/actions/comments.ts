@@ -2,8 +2,7 @@
 
 import { auth } from "@/auth"
 import { revalidatePath } from "next/cache"
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+import { postCommentApi, deleteCommentApi, updateCommentApi } from "@/lib/api/comments"
 
 export async function createComment(articleId: number, articleDocumentId: string, content: string) {
     const session = await auth()
@@ -13,21 +12,7 @@ export async function createComment(articleId: number, articleDocumentId: string
     }
 
     try {
-        const res = await fetch(`${API_URL}/api/comments`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${session.user.jwt}`,
-            },
-            body: JSON.stringify({
-                data: {
-                    content,
-                    article: articleId,
-                    user: session.user.id,
-                },
-            }),
-        })
-
+        const res = await postCommentApi(session.user.id, articleId, content, session.user.jwt)
         const data = await res.json()
 
         if (!res.ok) {
@@ -49,13 +34,7 @@ export async function deleteComment(commentId: string, articleDocumentId: string
     }
 
     try {
-        const res = await fetch(`${API_URL}/api/comments/${commentId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${session.user.jwt}`,
-            },
-        })
-
+        const res = await deleteCommentApi(commentId, session.user.jwt)
         const data = await res.json()
 
         if (!res.ok) {
@@ -77,19 +56,7 @@ export async function updateComment(commentId: string, articleDocumentId: string
     }
 
     try {
-        const res = await fetch(`${API_URL}/api/comments/${commentId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${session.user.jwt}`,
-            },
-            body: JSON.stringify({
-                data: {
-                    content,
-                },
-            }),
-        })
-
+        const res = await updateCommentApi(commentId, content, session.user.jwt)
         const data = await res.json()
 
         if (!res.ok) {

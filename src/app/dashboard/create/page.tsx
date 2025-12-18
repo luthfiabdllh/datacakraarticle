@@ -1,7 +1,7 @@
 "use client"
 
 import { ArticleForm } from "@/components/article-form"
-import { useCreateArticleMutation } from "@/redux/api/apiSlice"
+import { useCreateArticleMutation } from "@/redux/api"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"

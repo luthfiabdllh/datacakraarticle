@@ -1,7 +1,7 @@
 "use client"
 
 import { ArticleForm } from "@/components/article-form"
-import { useGetArticleByIdQuery, useUpdateArticleMutation } from "@/redux/api/apiSlice"
+import { useGetArticleByIdQuery, useUpdateArticleMutation } from "@/redux/api"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"

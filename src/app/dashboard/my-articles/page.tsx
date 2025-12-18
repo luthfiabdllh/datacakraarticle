@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useGetMyArticlesQuery, useDeleteArticleMutation } from "@/redux/api/apiSlice"
+import { useGetMyArticlesQuery, useDeleteArticleMutation } from "@/redux/api"
 import { Button } from "@/components/ui/button"
 import {
     Table,

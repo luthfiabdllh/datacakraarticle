@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useGetCategoriesQuery, useCreateCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from "@/redux/api/apiSlice"
+import { useGetCategoriesQuery, useCreateCategoryMutation, useUpdateCategoryMutation, useDeleteCategoryMutation } from "@/redux/api"
 import { Button } from "@/components/ui/button"
 import {
     Table,

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArticleCard } from "@/components/article-card"
-import { useGetMyArticlesQuery, useGetCategoriesQuery } from "@/redux/api/apiSlice"
+import { useGetMyArticlesQuery, useGetCategoriesQuery } from "@/redux/api"
 import { Loader2, FileText, Layers, Plus } from "lucide-react"
 
 export default function DashboardPage() {
