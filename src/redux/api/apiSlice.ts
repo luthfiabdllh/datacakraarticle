@@ -55,7 +55,7 @@ export const apiSlice = createApi({
             }),
             invalidatesTags: ["Article", "UserArticles"],
         }),
-        updateArticle: builder.mutation<ApiResponse<Article>, { id: number; data: Partial<Article> }>({
+        updateArticle: builder.mutation<ApiResponse<Article>, { id: string; data: Partial<Article> }>({
             query: ({ id, data }) => ({
                 url: `articles/${id}`,
                 method: "PUT",
@@ -63,7 +63,7 @@ export const apiSlice = createApi({
             }),
             invalidatesTags: (result, error, { id }) => ["Article", "UserArticles", { type: "Article", id }],
         }),
-        deleteArticle: builder.mutation<ApiResponse<Article>, number>({
+        deleteArticle: builder.mutation<ApiResponse<Article>, string>({
             query: (id) => ({
                 url: `articles/${id}`,
                 method: "DELETE",

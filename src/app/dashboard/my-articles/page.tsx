@@ -35,7 +35,7 @@ export default function MyArticlesPage() {
     })
 
     const [deleteArticle, { isLoading: isDeleting }] = useDeleteArticleMutation()
-    const [articleToDelete, setArticleToDelete] = useState<number | null>(null)
+    const [articleToDelete, setArticleToDelete] = useState<string | null>(null)
 
     const handleDelete = async () => {
         if (!articleToDelete) return
@@ -97,9 +97,9 @@ export default function MyArticlesPage() {
                                                 </Link>
                                             </Button>
 
-                                            <Dialog open={articleToDelete === article.id} onOpenChange={(open) => !open && setArticleToDelete(null)}>
+                                            <Dialog open={articleToDelete === article.documentId} onOpenChange={(open) => !open && setArticleToDelete(null)}>
                                                 <DialogTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => setArticleToDelete(article.id)}>
+                                                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => setArticleToDelete(article.documentId)}>
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </DialogTrigger>

@@ -43,7 +43,7 @@ export function CommentItem({ comment, articleDocumentId }: CommentItemProps) {
     async function handleUpdate() {
         if (!editContent.trim()) return
         setIsLoading(true)
-        const result = await updateComment(comment.id, articleDocumentId, editContent)
+        const result = await updateComment(comment.documentId, articleDocumentId, editContent)
         setIsLoading(false)
 
         if (result.error) {
@@ -56,7 +56,7 @@ export function CommentItem({ comment, articleDocumentId }: CommentItemProps) {
 
     async function handleDelete() {
         setIsLoading(true)
-        const result = await deleteComment(comment.id, articleDocumentId)
+        const result = await deleteComment(comment.documentId, articleDocumentId)
         setIsLoading(false)
         setIsDeleteDialogOpen(false)
 

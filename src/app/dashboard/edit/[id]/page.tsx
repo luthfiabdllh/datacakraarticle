@@ -26,7 +26,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
 
         try {
             await updateArticle({
-                id: articleData.data.id,
+                id: articleData.data.documentId,
                 data: {
                     ...values,
                     category: parseInt(values.category),

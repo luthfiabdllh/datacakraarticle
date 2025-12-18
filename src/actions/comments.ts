@@ -41,7 +41,7 @@ export async function createComment(articleId: number, articleDocumentId: string
     }
 }
 
-export async function deleteComment(commentId: number, articleDocumentId: string) {
+export async function deleteComment(commentId: string, articleDocumentId: string) {
     const session = await auth()
 
     if (!session || !session.user || !session.user.jwt) {
@@ -69,7 +69,7 @@ export async function deleteComment(commentId: number, articleDocumentId: string
     }
 }
 
-export async function updateComment(commentId: number, articleDocumentId: string, content: string) {
+export async function updateComment(commentId: string, articleDocumentId: string, content: string) {
     const session = await auth()
 
     if (!session || !session.user || !session.user.jwt) {
