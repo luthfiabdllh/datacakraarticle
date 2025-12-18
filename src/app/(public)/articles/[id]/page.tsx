@@ -1,8 +1,9 @@
-import { fetchArticleById } from "@/lib/api"
+import { fetchArticleById, fetchArticles } from "@/lib/api"
+import { ArticleCard } from "@/components/article-card"
 import { CommentList } from "@/components/comment-list"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { CalendarIcon } from "lucide-react"
+import { ArrowRight, CalendarIcon, ChevronLeft } from "lucide-react"
 import { format } from "date-fns"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
@@ -47,59 +48,75 @@ export default async function ArticleDetailPage({ params }: PageProps) {
         notFound()
     }
 
+    const { data: recommendedArticles } = await fetchArticles({ pageSize: 4 }, session?.user?.jwt)
+
     return (
-        <div className="container py-12 max-w-4xl">
-            {/* Article Header */}
-            <div className="space-y-6 mb-8">
-                <div className="space-y-2">
+        <section className="container py-32">
+            <div className="relative flex flex-col justify-between gap-10 lg:flex-row">
+                <aside className="top-10 h-fit flex-shrink-0 lg:sticky lg:w-[300px] xl:w-[400px]">
+                    <a
+                        className="mb-5 flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+                        href="/"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                        Return to home
+                    </a>
                     {article.category && (
-                        <Badge variant="secondary">{article.category.name}</Badge>
+                        <div className="mb-4">
+                            <Badge variant="secondary">{article.category.name}</Badge>
+                        </div>
                     )}
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+                    <h1 className="mb-5 text-3xl font-bold text-balance lg:text-4xl text-foreground">
                         {article.title}
                     </h1>
-                </div>
-
-                <div className="flex items-center gap-4 text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
+                    <div className="flex gap-3 items-center">
+                        <Avatar className="size-10 rounded-full border">
                             <AvatarImage src="" />
                             <AvatarFallback>{article.user?.username?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
                         </Avatar>
-                        <span className="font-medium text-foreground">{article.user?.username || "Unknown Author"}</span>
+                        <div>
+                            <h2 className="font-semibold text-sm">{article.user?.username || "Unknown Author"}</h2>
+                            <p className="text-xs text-muted-foreground">
+                                {format(new Date(article.publishedAt), "MMMM d, yyyy")}
+                            </p>
+                        </div>
                     </div>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                        <CalendarIcon className="w-4 h-4" />
-                        <span>{format(new Date(article.publishedAt), "MMMM d, yyyy")}</span>
+                </aside>
+
+                <article className="lg:flex-1 lg:max-w-3xl">
+                    <div className="aspect-video w-full overflow-hidden rounded-xl bg-muted mb-8 border shadow-sm">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={article.cover_image_url}
+                            alt={article.title}
+                            className="h-full w-full object-cover"
+                        />
                     </div>
-                </div>
+
+                    <div className="prose prose-stone dark:prose-invert max-w-none mb-12">
+                        <p className="whitespace-pre-wrap text-lg leading-relaxed">{article.description}</p>
+                    </div>
+
+                    <hr className="my-12 border-muted" />
+
+                    <CommentList
+                        comments={article.comments}
+                        articleId={article.id}
+                        articleDocumentId={article.documentId}
+                    />
+
+                    <hr className="my-12 border-muted" />
+
+                    <div className="space-y-6">
+                        <h3 className="text-2xl font-bold tracking-tight">Recommended Articles</h3>
+                        <div className="grid gap-6 sm:grid-cols-2">
+                            {recommendedArticles.filter(a => a.documentId !== article.documentId).slice(0, 2).map((article) => (
+                                <ArticleCard key={article.id} article={article} />
+                            ))}
+                        </div>
+                    </div>
+                </article>
             </div>
-
-            {/* Cover Image */}
-            <div className="aspect-video w-full overflow-hidden rounded-xl bg-muted mb-10 border shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                    src={article.cover_image_url}
-                    alt={article.title}
-                    className="h-full w-full object-cover"
-                />
-            </div>
-
-            {/* Content */}
-            <article className="prose prose-stone dark:prose-invert max-w-none mb-12">
-                {/* Simple text rendering for now, can be upgraded to Markdown/Rich Text if API supports it */}
-                <p className="whitespace-pre-wrap text-lg leading-relaxed">{article.description}</p>
-            </article>
-
-            <hr className="my-12 border-muted" />
-
-            {/* Comments Section */}
-            <CommentList
-                comments={article.comments}
-                articleId={article.id}
-                articleDocumentId={article.documentId}
-            />
-        </div>
+        </section>
     )
 }
